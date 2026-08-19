@@ -1,90 +1,436 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday!</title>
+  <title>Happy Birthday </title>
+  <meta name="description" content="A little birthday surprise with a pink Supra.">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Pacifico&display=swap');
+
+    :root {
+      --pink: #ff4fa3;
+      --hot-pink: #ff1688;
+      --soft-pink: #ffb6dc;
+      --bg: #09070d;
+      --card: rgba(255,255,255,.075);
+      --text: #fff7fc;
+      --muted: #cdbdca;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 30, 145, .20), transparent 32rem),
+        radial-gradient(circle at 10% 35%, rgba(125, 45, 255, .10), transparent 25rem),
+        linear-gradient(135deg, #09070d, #130b15 55%, #09070d);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .18;
+      background-image:
+        radial-gradient(circle, #fff 1px, transparent 1px),
+        radial-gradient(circle, #ff4fa3 1px, transparent 1px);
+      background-size: 85px 85px, 130px 130px;
+      background-position: 0 0, 30px 50px;
+      mask-image: linear-gradient(to bottom, black, transparent 80%);
+    }
+
+    .hero {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+      min-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      background: #ffefd5;
+      position: relative;
+      padding: 70px 0 45px;
+    }
+
+    .badge {
+      padding: 9px 17px;
+      border: 1px solid rgba(255, 120, 190, .45);
+      border-radius: 999px;
+      color: #ffd5ec;
+      background: rgba(255, 50, 150, .08);
+      box-shadow: 0 0 28px rgba(255, 50, 150, .13);
+      font-size: .78rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
     }
 
     h1 {
-      margin-top: 50px;
-      font-size: 2.5em;
-      color: #ff4500;
+      margin: 0;
+      font-family: Pacifico, cursive;
+      font-size: clamp(3.3rem, 10vw, 7.5rem);
+      font-weight: 400;
+      line-height: 1.05;
+      color: #fff;
+      text-shadow:
+        0 0 10px rgba(255,255,255,.55),
+        0 0 28px rgba(255, 35, 145, .9),
+        0 0 70px rgba(255, 35, 145, .45);
+    }
+
+    .subtitle {
+      max-width: 650px;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      line-height: 1.7;
+    }
+
+    .subtitle strong { color: #ff76bb; }
+
+    .balloon-area {
+      width: min(850px, 100%);
+      margin: 55px auto 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .balloon-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
     }
 
     .balloon {
-      position: absolute;
-      bottom: -150px;
-      width: 60px;
-      height: 80px;
-      border-radius: 50%;
-      background-color: #ff69b4;
-      animation: float 6s ease-in-out infinite;
+      width: 84px;
+      height: 106px;
+      border-radius: 52% 48% 48% 52%;
+      position: relative;
+      border: 1px solid rgba(255,255,255,.35);
       cursor: pointer;
+      box-shadow: inset -13px -17px 22px rgba(0,0,0,.18), inset 10px 8px 15px rgba(255,255,255,.24), 0 0 25px currentColor;
+      transition: transform .2s ease, opacity .35s ease, filter .2s ease;
+      animation: bob 2.8s ease-in-out infinite;
     }
 
-    @keyframes float {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-100vh); }
+    .balloon::before {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 23px;
+      top: 10px;
+      left: 17px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.62);
+      filter: blur(1px);
+      transform: rotate(25deg);
     }
 
-    #supra-reveal {
-      display: none;
-      margin-top: 30px;
+    .balloon::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 54px;
+      background: currentColor;
+      top: 104px;
+      left: 50%;
+      opacity: .7;
     }
 
-    .supra-img {
-      max-width: 95%;
-      height: auto;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-      transform: scale(0.8);
+    .balloon.popped {
+      transform: scale(1.5);
       opacity: 0;
-      transition: transform 1s ease, opacity 1s ease;
+      pointer-events: none;
+      filter: blur(5px);
     }
 
-    .supra-img.show {
-      transform: scale(1);
-      opacity: 1;
+    .balloon-label {
+      color: #d8cad4;
+      font-size: .8rem;
+    }
+
+    @keyframes bob {
+      0%,100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+
+    .b1 { background:#ff573d; color:#ff573d; }
+    .b2 { background:#63d84b; color:#63d84b; animation-delay:.25s; }
+    .b3 { background:#2e9cff; color:#2e9cff; animation-delay:.5s; }
+    .b4 { background:#ff4fa3; color:#ff4fa3; animation-delay:.75s; }
+
+    .hint {
+      margin-top: 34px;
+      font-size: .9rem;
+      color: #9e8f9b;
+    }
+
+    #surprise {
+      display: none;
+      width: min(1120px, 92%);
+      margin: 0 auto 100px;
+      opacity: 0;
+      transform: translateY(35px);
+    }
+
+    #surprise.show {
+      display: block;
+      animation: reveal .9s ease forwards;
+    }
+
+    @keyframes reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .unlock {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 35px;
+      color: #ff77bc;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-size: .85rem;
+    }
+
+    .unlock::before, .unlock::after {
+      content: "";
+      height: 1px;
+      width: 110px;
+      background: linear-gradient(90deg, transparent, #ff4fa3);
+      box-shadow: 0 0 10px #ff4fa3;
+    }
+
+    .unlock::after { transform: rotate(180deg); }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+    }
+
+    .photo-card {
+      padding: 9px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(255,255,255,.17), rgba(255, 55, 155, .06));
+      border: 1px solid rgba(255, 104, 181, .45);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 35px rgba(255, 40, 150, .12);
+      transition: transform .35s ease, box-shadow .35s ease;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 28px 70px rgba(0,0,0,.5), 0 0 50px rgba(255, 40, 150, .22);
+    }
+
+    .photo-card img {
+      display: block;
+      width: 100%;
+      height: 390px;
+      object-fit: cover;
+      border-radius: 17px;
+    }
+
+    .photo-card:nth-child(2) img { object-position: center; }
+
+    .message {
+      max-width: 720px;
+      margin: 45px auto 0;
+      text-align: center;
+      padding: 35px 25px;
+      border-top: 1px solid rgba(255, 94, 177, .3);
+      border-bottom: 1px solid rgba(255, 94, 177, .3);
+    }
+
+    .message h2 {
+      margin: 0 0 13px;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+    }
+
+    .message p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 1.03rem;
+    }
+
+    .signature {
+      margin-top: 20px;
+      font-family: Pacifico, cursive;
+      color: #ff72b8;
+      font-size: 1.7rem;
+    }
+
+    .confetti {
+      position: fixed;
+      top: -20px;
+      width: 8px;
+      height: 14px;
+      pointer-events: none;
+      animation: fall linear forwards;
+      z-index: 20;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: .15;
+      }
+    }
+
+    .pop-note {
+      position: fixed;
+      pointer-events: none;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 15px #ff38a0;
+      animation: popText .7s ease forwards;
+      z-index: 30;
+    }
+
+    @keyframes popText {
+      from { opacity: 1; transform: translate(-50%, -50%) scale(.7); }
+      to { opacity: 0; transform: translate(-50%, -120px) scale(1.2); }
+    }
+
+    footer {
+      text-align: center;
+      color: #6f626c;
+      font-size: .78rem;
+      padding: 0 20px 30px;
+    }
+
+    @media (max-width: 720px) {
+      .hero { min-height: 92vh; }
+      .balloon-area { grid-template-columns: repeat(2, 1fr); row-gap: 35px; }
+      .gallery { grid-template-columns: 1fr; }
+      .photo-card img { height: 300px; }
+      .unlock::before, .unlock::after { width: 45px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>🎉 Happy Birthday! 🎉</h1>
-  <p>Pop all the balloons for a surprise!</p>
 
-  <!-- Balloons -->
-  <div class="balloon" style="left:20%; background:#ff4500;"></div>
-  <div class="balloon" style="left:40%; background:#32cd32;"></div>
-  <div class="balloon" style="left:60%; background:#1e90ff;"></div>
-  <div class="balloon" style="left:80%; background:#ff69b4;"></div>
+  <main class="hero">
+    <div class="badge">A little surprise for you ✨</div>
+    <h1>Happy Birthday!</h1>
+    <p class="subtitle">
+      Some birthdays deserve more than a simple message.
+      <strong>Pop all four balloons</strong> and unlock your surprise. 🎈
+    </p>
 
-  <!-- Surprise Supra -->
-  <div id="supra-reveal">
-    <img src="toyota-supra-mk4.png" alt="Supra MK4" class="supra-img">
-  </div>
+    <div class="balloon-area">
+      <div class="balloon-wrap">
+        <div class="balloon b1"></div>
+        <span class="balloon-label">Click to pop!</span>
+      </div>
+      <div class="balloon-wrap">
+        <div class="balloon b2"></div>
+        <span class="balloon-label">Click to pop!</span>
+      </div>
+      <div class="balloon-wrap">
+        <div class="balloon b3"></div>
+        <span class="balloon-label">Click to pop!</span>
+      </div>
+      <div class="balloon-wrap">
+        <div class="balloon b4"></div>
+        <span class="balloon-label">Click to pop!</span>
+      </div>
+    </div>
+
+    <div class="hint">No cheating... the surprise is worth it 😉</div>
+  </main>
+
+  <section id="surprise">
+    <div class="unlock">Surprise Unlocked! 🎉</div>
+
+    <div class="gallery">
+      <div class="photo-card">
+        <img src="toyota-supra-mk4.png" alt="Pink Toyota Supra MK4 from the front">
+      </div>
+      <div class="photo-card">
+        <img src="supra-pink-rear.jpg" alt="Pink Toyota Supra MK4 from the rear">
+      </div>
+    </div>
+
+    <div class="message">
+      <h2>For someone special 💗</h2>
+      <p>
+        Wishing you a day full of happiness, laughter,
+        and unforgettable moments. May this new year of your life
+        bring you everything you've been hoping for — and a few
+        beautiful surprises along the way.
+      </p>
+      <div class="signature">Enjoy your special day! ✨</div>
+    </div>
+  </section>
+
 
   <script>
     const balloons = document.querySelectorAll('.balloon');
+    const surprise = document.getElementById('surprise');
     let popped = 0;
 
+    function confettiBurst() {
+      const symbols = ['✦', '◆', '●', '♥'];
+      for (let i = 0; i < 75; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti';
+        piece.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.fontSize = (8 + Math.random() * 12) + 'px';
+        piece.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+        piece.style.animationDelay = Math.random() * .6 + 's';
+        piece.style.color = ['#ff4fa3','#ffd166','#7ee8fa','#b8ff72','#ffffff'][Math.floor(Math.random()*5)];
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 6000);
+      }
+    }
+
     balloons.forEach(balloon => {
-      balloon.addEventListener('click', () => {
-        balloon.style.visibility = 'hidden';
+      balloon.addEventListener('click', (event) => {
+        if (balloon.classList.contains('popped')) return;
+
+        balloon.classList.add('popped');
         popped++;
+
+        const note = document.createElement('div');
+        note.className = 'pop-note';
+        note.textContent = 'POP! 🎈';
+        note.style.left = event.clientX + 'px';
+        note.style.top = event.clientY + 'px';
+        document.body.appendChild(note);
+        setTimeout(() => note.remove(), 800);
+
         if (popped === balloons.length) {
-          // Show Supra after last balloon is popped
-          const supraDiv = document.getElementById('supra-reveal');
-          supraDiv.style.display = 'block';
           setTimeout(() => {
-            supraDiv.querySelector('.supra-img').classList.add('show');
-          }, 200);
+            surprise.style.display = 'block';
+            requestAnimationFrame(() => surprise.classList.add('show'));
+            confettiBurst();
+            surprise.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 450);
         }
       });
     });
